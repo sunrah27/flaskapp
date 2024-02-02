@@ -1,4 +1,4 @@
--- DROP DATABASE IF EXISTS testdb;
+DROP DATABASE IF EXISTS testdb;
 
 CREATE DATABASE IF NOT EXISTS testdb;
 
@@ -40,12 +40,22 @@ CREATE TABLE IF NOT EXISTS `details` (
   CONSTRAINT `fk_details_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 );
 
-CREATE VIEW IF NOT EXISTS test_view AS
+
+CREATE VIEW test_view AS
 SELECT
-    u.id AS user_id, u.username,
-    d.fname, d.lname, d.phone, d.email, d.address, d.postalZip,
-    d.city, d.country, d.registration_datetime,
-    us.salt
+    u.id AS user_id,
+    u.username,
+    d.fname,
+    d.lname,
+    d.phone,
+    d.email,
+    d.address,
+    d.postalZip,
+    d.city,
+    d.country,
+    d.registration_datetime,
+    us.salt,
+    LENGTH(us.salt) AS salt_length
 FROM
     user u
 JOIN
