@@ -1001,7 +1001,7 @@ const testData = [{"username":"obagnold0","password":"zF3\"5eEC","email":"obagno
 
 // Loop through the test data and make a POST request for each entry
 testData.forEach(data => {
-  fetch('http://127.0.0.1:5000/api/register', {
+  fetch('http://127.0.0.1:5000/api/v1/register', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

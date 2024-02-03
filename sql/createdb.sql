@@ -45,6 +45,7 @@ CREATE VIEW test_view AS
 SELECT
     u.id AS user_id,
     u.username,
+    u.password,
     d.fname,
     d.lname,
     d.phone,
