@@ -1,10 +1,8 @@
 # app.py
-
 from flask import Flask, request, jsonify
-import mysql.connector
+from flask_cors import CORS
 from config import db_config
-import hashlib
-import secrets
+import hashlib, mysql.connector, secrets
 
 app = Flask(__name__)
 
@@ -42,7 +40,7 @@ def register_user():
         cursor = connection.cursor()
 
         # Check for Duplicate Email (First Check)
-        cursor.execute("SELECT user_id FROM details WHERE email = %s", (data.get('email'),))
+        cursor.execute("", (data.get('email'),))
         if cursor.fetchone():
             return jsonify({"error": "Email is already registered", "code": duplicate_email_code}), 400
 
