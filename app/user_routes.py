@@ -131,5 +131,6 @@ def protected():
     return jsonify(logged_in_as=current_user), 200
 
 @user_blueprint.route("/")
+@user_blueprint.route("/index.html")
 def home():
     return "Hello world!"
