@@ -13,7 +13,7 @@ class Config:
     JWT_COOKIE_CSRF_PROTECT = False  # Set to True if you want CSRF protection
 
     # Set cookie expiration to match token expiration
-    JWT_COOKIE_EXPIRES = timedelta(hours=1)
+    JWT_COOKIE_EXPIRES = timedelta(minutes=30)
 
 
 db_config = {
