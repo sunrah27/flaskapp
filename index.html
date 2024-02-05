@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protected Endpoint Test</title>
+</head>
+<body>
+    <button onclick="fetchProtectedEndpoint()">Fetch Protected Endpoint</button>
+    
+    <script>
+        function fetchProtectedEndpoint() {
+            // Fetch the protected endpoint
+            fetch('http://127.0.0.1:5000/api/v1/protected', {
+                method: 'GET',
+                credentials: 'include',  // Include cookies in the request
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response from protected endpoint:', data);
+                alert('User ID: ' + data.logged_in_as);
+            })
+            .catch(error => {
+                console.error('Error fetching protected endpoint:', error);
+                alert('Error fetching protected endpoint. Check the console for details.');
+            });
+        }
+    </script>
+</body>
+</html>

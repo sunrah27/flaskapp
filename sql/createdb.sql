@@ -6,57 +6,52 @@ USE testdb;
 
 -- Create the user table if it does not exist
 CREATE TABLE IF NOT EXISTS `user` (
-  `id` MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `username` VARCHAR(100) DEFAULT NULL,
-  `password` VARCHAR(64) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`)
+    `id` MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `email` VARCHAR(50) NOT NULL,
+    `password` VARCHAR(64) NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `email` (`email`)
 ) AUTO_INCREMENT=1;
 
 -- Create the userSalt table if it does not exist
 CREATE TABLE IF NOT EXISTS `userSalt` (
-  `user_id` MEDIUMINT(8) UNSIGNED NOT NULL,
-  `salt` VARCHAR(64) DEFAULT NULL,
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `user_id_unique` (`user_id`),
-  CONSTRAINT `fk_userSalt_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+    `user_id` MEDIUMINT(8) UNSIGNED NOT NULL,
+    `salt` VARCHAR(64) NOT NULL,
+    PRIMARY KEY (`user_id`),
+    UNIQUE KEY `user_id_unique` (`user_id`),
+    CONSTRAINT `fk_userSalt_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 );
 
 -- Create the details table if it does not exist
 CREATE TABLE IF NOT EXISTS `details` (
-  `user_id` MEDIUMINT(8) UNSIGNED NOT NULL,
-  `fname` VARCHAR(100) DEFAULT NULL,
-  `lname` VARCHAR(100) DEFAULT NULL,
-  `phone` VARCHAR(50) DEFAULT NULL,
-  `email` VARCHAR(50) DEFAULT NULL,
-  `address` VARCHAR(255) DEFAULT NULL,
-  `postalZip` VARCHAR(10) DEFAULT NULL,
-  `city` VARCHAR(50) DEFAULT NULL,
-  `country` VARCHAR(50) DEFAULT NULL,
-  `registration_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `user_id_unique` (`user_id`),
-  UNIQUE KEY `email_unique` (`email`),
-  CONSTRAINT `fk_details_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+    `user_id` MEDIUMINT(8) UNSIGNED NOT NULL,
+    `fname` VARCHAR(100) NOT NULL,
+    `lname` VARCHAR(100) NOT NULL,
+    `phone` VARCHAR(50) DEFAULT NULL,
+    `address` VARCHAR(255) DEFAULT NULL,
+    `postcode` VARCHAR(8) DEFAULT NULL,
+    `city` VARCHAR(50) DEFAULT NULL,
+    `country` VARCHAR(50) DEFAULT NULL,
+    `registration_datetime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`user_id`),
+    UNIQUE KEY `user_id_unique` (`user_id`),
+    CONSTRAINT `fk_details_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 );
-
 
 CREATE VIEW test_view AS
 SELECT
-    u.id AS user_id,
-    u.username,
+    u.id,
+    u.email,
     u.password,
     d.fname,
     d.lname,
     d.phone,
-    d.email,
     d.address,
-    d.postalZip,
+    d.postcode,
     d.city,
     d.country,
     d.registration_datetime,
-    us.salt,
-    LENGTH(us.salt) AS salt_length
+    us.salt
 FROM
     user u
 JOIN
