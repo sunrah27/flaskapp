@@ -7,3 +7,6 @@ app/__pycache__/
 *.pyo
 *.pyd
 .vscode/
+
+app/config.py
+app/main.py
