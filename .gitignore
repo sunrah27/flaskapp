@@ -8,6 +8,9 @@ app/__pycache__/
 *.pyd
 .vscode/
 venv/
+*.pyc
+*.pyo
+*.pyd
 app/config.py
 app/main.py
 
