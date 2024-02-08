@@ -1,14 +1,10 @@
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
+.vscode/
 app/__pycache__/
 *.pyc
 *.pyo
 *.pyd
-
-.vscode/
+app/config.py
+app/main.py
 
 venv/
 *.pyc
@@ -16,9 +12,7 @@ venv/
 *.pyd
 *.cfg
 
-app/config.py
-app/main.py
-
+ignore/
 *.ignore
-
-sql/
+ignore/sql/
+ignore/js/
