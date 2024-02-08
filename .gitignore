@@ -7,6 +7,9 @@ app/__pycache__/
 *.pyo
 *.pyd
 .vscode/
-
+venv/
 app/config.py
 app/main.py
+
+app.ignore
+sql/

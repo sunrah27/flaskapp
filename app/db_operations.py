@@ -1,7 +1,7 @@
 # app/db_operations.py
 import mysql.connector
 # from app.config import db_config
-from app.main import connection
+from app.config import connection
 from app.constants import UserCodes
 
 class DatabaseConnectionError(Exception):
