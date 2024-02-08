@@ -19,5 +19,6 @@ venv/
 app/config.py
 app/main.py
 
-app.ignore
+*.ignore
+
 sql/
