@@ -2,15 +2,20 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+
 app/__pycache__/
 *.pyc
 *.pyo
 *.pyd
+
 .vscode/
+
 venv/
 *.pyc
 *.pyo
 *.pyd
+*.cfg
+
 app/config.py
 app/main.py
 
