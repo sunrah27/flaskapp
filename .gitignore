@@ -3,8 +3,10 @@ app/__pycache__/
 *.pyc
 *.pyo
 *.pyd
+
 app/config.py
 app/main.py
+app/secrets.py
 
 venv/
 *.pyc
