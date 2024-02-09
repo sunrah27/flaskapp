@@ -1,5 +1,5 @@
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, request, jsonify, make_response, send_file
 from app.db_operations import get_db_connection
 from app.constants import UserCodes
 import hashlib, mysql.connector, secrets
@@ -130,7 +130,7 @@ def protected():
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
 
-# @user_blueprint.route("/")
+@user_blueprint.route("/")
 @user_blueprint.route("/index.html")
 def home():
-    return 'Hello World!'
+    return send_file('index.html')
