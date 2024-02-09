@@ -130,7 +130,7 @@ def protected():
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
 
-@user_blueprint.route("/")
+# @user_blueprint.route("/")
 @user_blueprint.route("/index.html")
 def home():
     return 'Hello World!'
