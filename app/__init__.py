@@ -1,5 +1,5 @@
 # app/__init__.py
-from flask import Flask, jsonify
+from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from app.config import Config
@@ -22,11 +22,3 @@ def create_app():
     app.register_blueprint(user_blueprint)
 
     return app
-
-@jwt.invalid_token_loader
-def custom_invalid_token_loader(error_string):
-    # Log or print additional information about the invalid token
-    print(f"Invalid token error: {error_string}")
-
-    # Return a custom response, if desired
-    return jsonify({"error": "Invalid token", "details": error_string}), 401
