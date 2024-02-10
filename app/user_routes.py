@@ -123,12 +123,49 @@ def login_user():
             cursor.close()
             connection.close()
 
+# Route to check if the user has logged in
 @user_blueprint.route("/api/v1/protected", methods=['GET'])
 @jwt_required()
 def protected():
     # Access the identity of the current user with get_jwt_identity
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
+
+# Route to get information for all products
+@user_blueprint.route('/api/v1/allproducts', methods=['GET'])
+def get_all_products():
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("SELECT sku, fullName, type, SUBSTRING_INDEX(images, ',', 1) AS first_image, star, price FROM product")
+        products = cursor.fetchall()
+        cursor.close()
+        return jsonify(products)
+    except Exception as err:
+        print(f"Error: {err}")
+        return jsonify({"error": str(err)}), 500
+
+# Route to get specific product detial based on the the sku
+@user_blueprint.route('/api/v1/productdetails', methods=['GET'])
+def get_product_details():
+    try:
+        sku = request.args.get('sku')
+        if not sku:
+            return jsonify({"message": "SKU parameter is required", "code": UserCodes.MISSING_SKU}), 400
+
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM product WHERE sku = %s", (sku,))
+        product = cursor.fetchone()
+        cursor.close()
+
+        if product:
+            return jsonify(product)
+        else:
+            return jsonify({"message": "Product not found", "code": UserCodes.PRODUCT_NOT_FOUND}), 404
+    except Exception as err:
+        print(f"Error: {err}")
+        return jsonify({"error": str(err), "code": UserCodes.DATABASE_CONNECTION_ERROR}), 500
 
 @user_blueprint.route("/")
 @user_blueprint.route("/index.html")
