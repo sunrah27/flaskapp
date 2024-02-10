@@ -19,10 +19,14 @@ logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
 def prepare_user_data(data):
-    required_fields = ['firstname', 'lastname', 'email', 'password', 'confirmedPassword', 'checkBox']
+    required_fields = ['firstname', 'lastname', 'email', 'password', 'checkBox']
     
-    if not all(field in data for field in required_fields):
-        logger.error("Missing required fields during user registration.")
+    if (required_fields[4] == 'false'):
+        logger.error("Invalid form submission will not procees. %s", UserCodes.FAKE_SUBMISSION)
+        return None, {"error": "Invald form submission will not proceed", "code": UserCodes.FAKE_SUBMISSION}
+
+    if not all(field in data for field in required_fields[:4]):  # Slice to include only the first four fields
+        logger.error("Missing required fields during user registration. %s", UserCodes.MISSING_CREDENTIALS)
         return None, {"error": "Missing required fields", "code": UserCodes.MISSING_CREDENTIALS}
 
     with get_db_connection() as connection:
@@ -31,7 +35,7 @@ def prepare_user_data(data):
         row = cursor.fetchone()
 
         if row is not None:
-            logger.error("Email is already registered during user registration.")
+            logger.error("Email is already registered during user registration. %s", UserCodes.DUPLICATE_EMAIL)
             return None, {"error": "Email is already registered", "code": UserCodes.DUPLICATE_EMAIL}
 
     salt = secrets.token_hex(32)
@@ -48,10 +52,11 @@ def prepare_user_data(data):
 @user_blueprint.route("/api/v1/register", methods=['POST'])
 def register_user():
     data = request.json
-
+    print(data)
     user_data, error_response = prepare_user_data(data)
 
     if error_response:
+        logger.error("API Data error. %s", error_response)
         return jsonify(error_response), 400
 
     try:
@@ -90,7 +95,7 @@ def login_user():
     hashed_password = data.get('password')
 
     if not email or not hashed_password:
-        logger.error("Missing email or password during login attempt.")
+        logger.error("Missing email or password during login attempt. %s", UserCodes.MISSING_CREDENTIALS)
         return jsonify({"error": "Missing email or password", "code": UserCodes.MISSING_CREDENTIALS}), 400
 
     try:
@@ -114,10 +119,10 @@ def login_user():
                 logger.info("Login successful: %s: %s", user_id, email)
                 return response
             else:
-                logger.error("Incorrect username or password during login attempt.")
+                logger.error("Incorrect username or password during login attempt. %s", UserCodes.INCORRECT_CREDENTIALS)
                 return jsonify({"error": "Incorrect username or password", "code": UserCodes.INCORRECT_CREDENTIALS}), 401
         else:
-            logger.error("Incorrect username or password during login attempt.")
+            logger.error("Incorrect username or password during login attempt. %s", UserCodes.INCORRECT_CREDENTIALS)
             return jsonify({"error": "Incorrect username or password", "code": UserCodes.INCORRECT_CREDENTIALS}), 401
 
     except mysql.connector.Error as err:
