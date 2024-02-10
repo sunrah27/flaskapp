@@ -19,7 +19,7 @@ logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
 def prepare_user_data(data):
-    required_fields = ['firstname', 'lastname', 'email', 'password']
+    required_fields = ['firstname', 'lastname', 'email', 'password', 'confirmedPassword', 'checkBox']
     
     if not all(field in data for field in required_fields):
         logger.error("Missing required fields during user registration.")
