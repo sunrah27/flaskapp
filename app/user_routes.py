@@ -97,18 +97,21 @@ def login_user():
         connection = get_db_connection()
         cursor = connection.cursor()
 
-        cursor.execute("SELECT user.id, password, salt FROM user JOIN userSalt ON user.id = userSalt.user_id WHERE email = %s", (email,))
+        # cursor.execute("SELECT user.id, password, salt FROM user JOIN userSalt ON user.id = userSalt.user_id WHERE email = %s", (email,))
+        cursor.execute("SELECT u.id, u.password, u.salt, d.fname, d.lname FROM user AS u JOIN userSalt AS us ON u.id = us.user_id JOIN details AS d ON u.id = d.user_id WHERE u.email = %s", (email,))
         user_data = cursor.fetchone()
 
         if user_data:
-            user_id, stored_hashed_password, stored_salt = user_data
+            user_id, stored_hashed_password, stored_salt, fname, lname = user_data
             entered_password_hash = hashlib.sha256((hashed_password + stored_salt).encode('utf-8')).hexdigest()
 
             if entered_password_hash == stored_hashed_password:
-                access_token = create_access_token(identity=user_id)
+                # Combine fname and lname into Fullname
+                fullname = f"{fname} {lname}"
+                access_token = create_access_token(identity=user_id, user_claims={'fullname': fullname})
                 response = make_response(jsonify({"message": "Login successful"}), 200)
                 response.set_cookie('access_token_cookie', access_token, httponly=True)
-                logger.info("Login successful: %s", email)
+                logger.info("Login successful: %s: %s", user_id, email)
                 return response
             else:
                 logger.error("Incorrect username or password during login attempt.")
