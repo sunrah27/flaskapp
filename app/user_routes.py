@@ -203,7 +203,7 @@ def get_logs():
     try:
         with open('app.log', 'r') as log_file:
             logs = log_file.readlines()
-            formatted_logs = ['<p style="background-color: darkgrey; color: white; padding: 3px; margin: 0px;">' + format_log(log.strip()) + '</p>' for log in logs]
+            formatted_logs = ['<p style="background-color: #3a3a3a; color: white; padding: 3px; margin: 0px;">' + format_log(log.strip()) + '</p>' for log in logs]
             return '\n'.join(formatted_logs)
     except Exception as e:
         logger.error("Error accessing log file: %s", e)
