@@ -98,7 +98,7 @@ def login_user():
         cursor = connection.cursor()
 
         # cursor.execute("SELECT user.id, password, salt FROM user JOIN userSalt ON user.id = userSalt.user_id WHERE email = %s", (email,))
-        cursor.execute("SELECT u.id, u.password, u.salt, d.fname, d.lname FROM user AS u JOIN userSalt AS us ON u.id = us.user_id JOIN details AS d ON u.id = d.user_id WHERE u.email = %s", (email,))
+        cursor.execute("SELECT user.id, user.password, userSalt.salt, details.fname, details.lname FROM user JOIN userSalt ON user.id = userSalt.user_id JOIN details ON user.id = details.user_id WHERE user.email = %s", (email,))
         user_data = cursor.fetchone()
 
         if user_data:
@@ -108,7 +108,7 @@ def login_user():
             if entered_password_hash == stored_hashed_password:
                 # Combine fname and lname into Fullname
                 fullname = f"{fname} {lname}"
-                access_token = create_access_token(identity=user_id, user_claims={'fullname': fullname})
+                access_token = create_access_token(identity={'user_id': user_id,'fullname': fullname})
                 response = make_response(jsonify({"message": "Login successful"}), 200)
                 response.set_cookie('access_token_cookie', access_token, httponly=True)
                 logger.info("Login successful: %s: %s", user_id, email)
