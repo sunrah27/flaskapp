@@ -191,17 +191,32 @@ def get_product_details():
         logger.error("Error fetching product details: %s", err)
         return jsonify({"error": str(err), "code": UserCodes.DATABASE_CONNECTION_ERROR}), 500
 
+# Default home page. Possible change the page to display log data
 @user_blueprint.route("/")
 @user_blueprint.route("/index.html")
 def home():
     return send_file('index.html')
 
+# Access log file as an API.
 @user_blueprint.route("/api/v1/logs", methods=['GET'])
 def get_logs():
     try:
         with open('app.log', 'r') as log_file:
-            logs = log_file.read()
-            return logs
+            logs = log_file.readlines()
+            formatted_logs = ['<p style="background-color: black; color: white; padding: 5px; margin: 5px; border-radius: 5px;">' + format_log(log.strip()) + '</p>' for log in logs]
+            return '\n'.join(formatted_logs)
     except Exception as e:
         logger.error("Error accessing log file: %s", e)
         return str(e), 500
+
+def format_log(log):
+    parts = log.split(' - ')
+    if len(parts) >= 4:
+        timestamp, _, level, message = parts[:4]
+        if level == 'INFO':
+            return f'<span style="color: green;">{timestamp} - {level}</span>: {message}'
+        elif level == 'ERROR':
+            return f'<span style="color: red;">{timestamp} - {level}</span>: {message}'
+        elif level == 'WARNING':
+            return f'<span style="color: yellow;">{timestamp} - {level}</span>: {message}'
+    return log
