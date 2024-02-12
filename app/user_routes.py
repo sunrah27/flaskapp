@@ -116,7 +116,7 @@ def login_user():
                 fullname = f"{fname} {lname}"
                 access_token = create_access_token(identity={'user_id': user_id,'fullname': fullname})
                 response = make_response(jsonify({"message": "Login successful"}), 200)
-                response.headers.set('Set-Cookie', f'access_token_cookie={access_token}; Domain=127.0.0.1; HttpOnly')
+                response.headers.set('Set-Cookie', f'access_token_cookie={access_token}; Domain=sunrah27.github.io/; HttpOnly')
                 logger.info("Login successful: %s: %s", user_id, email)
                 return response
             else:
