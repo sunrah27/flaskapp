@@ -15,6 +15,10 @@ class Config:
     # Set cookie expiration to match token expiration
     JWT_COOKIE_EXPIRES = timedelta(minutes=30)
 
+LOCAL = "http://127.0.0.1:5500/"
+LIVE = "https://sunrah27.github.io/eCommerce/"
+DOMAIN = LIVE
+
 connection = {
     'charset': "utf8mb4",
     'connect_timeout': 10,

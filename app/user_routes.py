@@ -4,6 +4,7 @@ from flask import Blueprint, request, jsonify, make_response, send_file, current
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 from app.db_operations import get_db_connection
 from app.constants import UserCodes
+from app.config import DOMAIN
 import hashlib
 import mysql.connector
 import secrets
@@ -115,7 +116,7 @@ def login_user():
                 fullname = f"{fname} {lname}"
                 access_token = create_access_token(identity={'user_id': user_id,'fullname': fullname})
                 response = make_response(jsonify({"message": "Login successful"}), 200)
-                response.set_cookie('access_token_cookie', access_token, httponly=True)
+                response.headers.set('Set-Cookie', f'access_token_cookie={access_token}; Domain=127.0.0.1; HttpOnly')
                 logger.info("Login successful: %s: %s", user_id, email)
                 return response
             else:
