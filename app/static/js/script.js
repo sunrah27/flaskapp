@@ -191,15 +191,22 @@ function checkLoggedInUser() {
         credentials: 'include' // This ensures that the browser includes the HTTPOnly cookie in the request
     })
     .then(response => {
-        if (!response.ok) {
+        if (response.ok) {
+            return response.json();
+        } else if (response.status === 401) {
+            return null;
+        } else {
             throw new Error('Network response was not ok');
         }
-        return response.json();
     })
     .then(data => {
-        updateMenuAndHideLoginMessage(data.logged_in_as.fullname);
+        // Update menu and hide login message with user's full name
+        if (data) {
+            updateMenuAndHideLoginMessage(data.logged_in_as.fullname);
+        }
     })
     .catch(error => {
+        // Log any errors
         console.error('There was a problem with the fetch operation:', error);
     });
 }
