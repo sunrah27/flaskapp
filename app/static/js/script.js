@@ -540,7 +540,6 @@ async function fetchRelatedProducts(currentSku, productData) {
     if (currentProduct) {
         // Filter products based on the pType of the current product
         const relatedProducts = productData.filter(product => product.type === currentProduct.type && parseInt(product.sku) !== parseInt(currentSku));
-        console.log(relatedProducts);
         // Display up to 4 related products
         const maxRelatedProducts = 4;
 
@@ -748,7 +747,7 @@ function handleLogin(event) {
     .then(data => {
         localStorage.setItem('newLogIn', 1);
         window.location.href = './index.html';
-        return console.log(data.message);
+        return
     })
     .catch(error => {
         console.error('Error fetching user data:', error);
