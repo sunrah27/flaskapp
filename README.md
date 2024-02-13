@@ -15,7 +15,7 @@ An ecommerce site with a shopping basket. Products details are retrived from a J
 
 A basic version of the site built purely using HTML, CSS and JS can be found at at [https://sunrah27.github.io/eCommerce/](https://sunrah27.github.io/eCommerce/)
 
-Link to repo: [https://github.com/sunrah27/eCommerce/tree/dev](https://github.com/sunrah27/eCommerce/tree/dev).
+Link to repo: [https://github.com/sunrah27/eCommerce/](https://github.com/sunrah27/eCommerce/).
 
 ## Features
 Site has following features completed:
