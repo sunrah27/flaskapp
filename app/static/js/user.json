@@ -1,0 +1,18 @@
+[
+    {
+        "username": "John Smith",
+        "email": "john.smith@gmail.com",
+        "password": "johnspassword",
+        "address1": "123 My Home",
+        "address2": "My Address", 
+        "address3": "E1 1AB"
+    },
+    {
+        "username": "Joe Bloggs",
+        "email": "joe.bloggs@gmail.com",
+        "password": "bloggy",
+        "address1": "999 Nlogs House",
+        "address2": "Bloggins", 
+        "address3": "B0 1GN"
+    }
+]

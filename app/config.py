@@ -9,7 +9,7 @@ class Config:
     JWT_SECRET_KEY = '46d54bbbf94a9d201dcc4df7de307dcd8d8b71d7716a23f16e16b5cb4f971157'
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=30)
     JWT_TOKEN_LOCATION = 'cookies'
-    JWT_COOKIE_SECURE = True  # Set to True in production (requires HTTPS)
+    JWT_COOKIE_SECURE = False  # Set to True in production (requires HTTPS)
     JWT_COOKIE_CSRF_PROTECT = True  # Set to True if you want CSRF protection
 
     # Set cookie expiration to match token expiration

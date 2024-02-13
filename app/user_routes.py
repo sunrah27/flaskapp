@@ -1,22 +1,15 @@
-import logging
-from logging.handlers import RotatingFileHandler
-from flask import Blueprint, request, jsonify, make_response, send_file, current_app
+# user_routes.py
+from flask import Blueprint, request, jsonify, make_response, render_template, send_from_directory
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 from app.db_operations import get_db_connection
 from app.constants import UserCodes
-import hashlib
-import mysql.connector
-import secrets
+import hashlib, mysql.connector, secrets, logging
 
+# Create a Blueprint object for user-related routes
 user_blueprint = Blueprint("user", __name__)
 
 # Configure logging
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler = RotatingFileHandler('app.log', maxBytes=10000, backupCount=1)
-handler.setFormatter(formatter)
 logger = logging.getLogger(__name__)
-logger.addHandler(handler)
-logger.setLevel(logging.INFO)
 
 def prepare_user_data(data):
     required_fields = ['firstname', 'lastname', 'email', 'password', 'checkBox']
@@ -115,9 +108,16 @@ def login_user():
                 fullname = f"{fname} {lname}"
                 access_token = create_access_token(identity={'user_id': user_id,'fullname': fullname})
                 response = make_response(jsonify({"message": "Login successful"}), 200)
-                response.headers.set('Set-Cookie', f'access_token_cookie={access_token}; Domain=.github.io; Secure; HttpOnly; Path=/eCommerce')
+                response.set_cookie('access_token_cookie', access_token, httponly=True, path='/')
                 logger.info("Login successful: %s: %s", user_id, email)
                 return response
+                # response_data = {
+                #     "message": "Login successful",
+                #     "access_token_cookie": access_token
+                # }
+                # response = make_response(jsonify(response_data), 200)
+                # logger.info("Login successful: %s: %s", user_id, email)
+                # return response
             else:
                 logger.error("Incorrect username or password during login attempt. %s", UserCodes.INCORRECT_CREDENTIALS)
                 return jsonify({"error": "Incorrect username or password", "code": UserCodes.INCORRECT_CREDENTIALS}), 401
@@ -170,7 +170,7 @@ def get_all_products():
     try:
         connection = get_db_connection()
         cursor = connection.cursor(dictionary=True)
-        cursor.execute("SELECT sku, fullName, type, SUBSTRING_INDEX(images, ',', 1) AS first_image, star, price FROM product")
+        cursor.execute("SELECT sku, fullName, type, SUBSTRING_INDEX(images, ',', 1) AS first_image, star, price, DATE_FORMAT(date, '%Y-%m-%d') AS date FROM product")
         products = cursor.fetchall()
         cursor.close()
         return jsonify(products)
@@ -198,33 +198,16 @@ def get_product_details():
     except Exception as err:
         logger.error("Error fetching product details: %s", err)
         return jsonify({"error": str(err), "code": UserCodes.DATABASE_CONNECTION_ERROR}), 500
+    
+@user_blueprint.route('/')
+def index():
+    return render_template('index.html')
 
-# Default home page. Possible change the page to display log data
-@user_blueprint.route("/")
-@user_blueprint.route("/index.html")
-def home():
-    return send_file('index.html')
+@user_blueprint.route('/<string:file_name>')
+def render_page(file_name):
+    # Assuming your templates are stored in a 'templates' folder
+    return render_template(file_name)
 
-# Access log file as an API.
-@user_blueprint.route("/api/v1/logs", methods=['GET'])
-def get_logs():
-    try:
-        with open('app.log', 'r') as log_file:
-            logs = log_file.readlines()
-            formatted_logs = ['<p style="background-color: #3a3a3a; color: white; padding: 3px; margin: 0px;">' + format_log(log.strip()) + '</p>' for log in logs]
-            return '\n'.join(formatted_logs)
-    except Exception as e:
-        logger.error("Error accessing log file: %s", e)
-        return str(e), 500
-
-def format_log(log):
-    parts = log.split(' - ')
-    if len(parts) >= 4:
-        timestamp, _, level, message = parts[:4]
-        if level == 'INFO':
-            return f'<span style="color: green;">{timestamp} - {level}</span>: {message}'
-        elif level == 'ERROR':
-            return f'<span style="color: red;">{timestamp} - {level}</span>: {message}'
-        elif level == 'WARNING':
-            return f'<span style="color: yellow;">{timestamp} - {level}</span>: {message}'
-    return log
+@user_blueprint.route('/api/v1/jsonObject', methods=['GET'])
+def get_json_object():
+    return send_from_directory('static/js', 'productdb.json')
