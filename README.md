@@ -1,6 +1,6 @@
 # Python Backend for eCommerce website
 
-A Python project built using Flask framework to act as the backend for my [eCommerce project](https://redstoreapi.onrender.com/). The App connects to a MySQL DB hosted on Aiven and also acts as the server for the API endpoints the eCommerce project uses for Login, Registration, Purchase Histroy and Product data. App also offers a backend to connect to the MySQL DB and update product data.
+A Python project built using Flask framework to act as the backend for my [eCommerce project](https://redstoreapi.onrender.com/) (App is hosted on Render and takes around 50sec to start up if not in use). The App connects to a MySQL DB hosted on Aiven and also acts as the server for the API endpoints the eCommerce project uses for Login, Registration, Purchase Histroy and Product data. App also offers a backend to connect to the MySQL DB and update product data.
 
 ## Inspiration
 
