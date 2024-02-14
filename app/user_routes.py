@@ -226,6 +226,9 @@ def get_all_products():
     except Exception as err:
         logger.error("Error fetching all products: %s", err)
         return jsonify({"error": str(err)}), 500
+    finally:
+        if connection.is_connected():
+            cursor.close()
 
 @user_blueprint.route('/api/v1/productdetails', methods=['GET'])
 def get_product_details():
@@ -247,6 +250,9 @@ def get_product_details():
     except Exception as err:
         logger.error("Error fetching product details: %s", err)
         return jsonify({"error": str(err), "code": UserCodes.DATABASE_CONNECTION_ERROR}), 500
+    finally:
+        if connection.is_connected():
+            cursor.close()
     
 @user_blueprint.route('/')
 def index():
