@@ -49,6 +49,12 @@ document.addEventListener('DOMContentLoaded', async function () {
         setupContactEventListeners();
     }
 
+    const isAccountsPage = window.location.pathname.includes('accounts.html');
+    if (isAccountsPage) {
+        displayAccountsPage();
+    }
+
+
     // Check if the user is logged in or not and redirect to Cart or Login page
     handleCartContainerClick();
     // Check if the user is logged in
@@ -60,20 +66,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 //
 // Functions run on multiple pages
 //
-
-// function to fetch data from JSON file
-// async function fetchDataFromJSON(filePath) {
-//     try {
-//         const response = await fetch(filePath);
-//         if (!response.ok) {
-//             throw new Error(`Error loading data from ${filePath}`);
-//         }
-//         return response.json();
-//     } catch (error) {
-//         console.error('Error fetching data:', error);
-//         throw error;
-//     }
-// }
 
 // function to generate star icons based on rating
 function generateStarIcons(rating) {
@@ -112,7 +104,7 @@ function handleCartContainerClick() {
             })
             .then(data => {
                 // Check if user is logged in
-                if (data.logged_in_as) {
+                if (data.message == "Success") {
                     // User is logged in, redirect to cart page
                     window.location.href = './cart.html';
                 } else {
@@ -125,13 +117,6 @@ function handleCartContainerClick() {
             });
         });
     }
-    // if (cartContainer) {
-    //     cartContainer.addEventListener('click', function () {
-    //         const loggedInUser = localStorage.getItem('loggedInUser');
-    //         const redirectPath = loggedInUser ? './cart.html' : './login.html';
-    //         window.location.href = redirectPath;
-    //     });
-    // }
 }
 
 // function to display a notification product is added cart
@@ -201,8 +186,8 @@ function checkLoggedInUser() {
     })
     .then(data => {
         // Update menu and hide login message with user's full name
-        if (data) {
-            updateMenuAndHideLoginMessage(data.logged_in_as.fullname);
+        if (data.message == "Success") {
+            updateMenuAndHideLoginMessage(data.user.fullname);
         }
     })
     .catch(error => {
@@ -211,8 +196,9 @@ function checkLoggedInUser() {
     });
 }
 
+
 function updateMenuAndHideLoginMessage(data) {
-    document.getElementById('menuItems').querySelector('li:last-child').innerHTML = `Hello ${data}`;
+    document.getElementById('menuItems').querySelector('li:last-child').innerHTML = `<a href="./accounts.html">Hello ${data}</a>`;
 }
 
 function hideLoginMessage() {
@@ -621,7 +607,7 @@ function displayCartItems(productData) {
                 `;
                 
                 // Calculate the total price for the cart
-                total += (item.quantity * product.pPrice);
+                total += (item.quantity * product.price);
 
                 // Append the cart item HTML to the cart items container
                 cartItemsContainer.innerHTML += cartItemHTML;
@@ -651,7 +637,7 @@ function displayCartItems(productData) {
                 `;
                 totalPriceContainer.innerHTML = totalPriceHTML;
             } else {
-                console.info('Product not found for SKU:', item.pSku);
+                console.info('Product not found for SKU:', item.sku);
             }
         })
     };
@@ -745,8 +731,7 @@ function handleLogin(event) {
         return response.json();
     })
     .then(data => {
-        localStorage.setItem('newLogIn', 1);
-        window.location.href = './index.html';
+        window.location.href = './accounts.html';
         return
     })
     .catch(error => {
@@ -875,7 +860,7 @@ function checkSelectedOptions() {
     } else {
         productNo.classList.add('hidden');
         orderNo.classList.add('hidden');
-    };
+    }
 }
 
 // Display thank you message when contact us form is completed
@@ -894,5 +879,126 @@ function contactMessage(event) {
         message.classList.add('hide');
     } else {
         message.classList.remove('hide');
+    }
+}
+
+// 
+// Accounts page functions
+//
+
+function displayAccountsPage() {
+    fetch('/api/v1/protected', {
+        method: 'GET',
+        credentials: 'include'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Check if user is logged in
+        if (data.message === "Success") {
+            displayAccountInformation();
+        } else if (data.message === "Not logged in") {
+            // User is not logged in, redirect to login page
+            window.location.href = './login.html';
+        }
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
+}
+
+function displayAccountInformation() {
+    fetch('/api/v1/accounts', {
+        method: 'GET',
+        credentials: 'include'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        printUserInformation(data);
+        accountPageEventListener();
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    })
+}
+
+function printUserInformation(data) {
+    const userId = document.getElementById('userId');
+    const firstName = document.getElementById('firstName');
+    const lastName = document.getElementById('lastname');
+    const phoneNumber = document.getElementById('phoneNumber');
+    const emailElement = document.getElementById('email');
+    const address = document.getElementById('address');
+    const city = document.getElementById('city');
+    const country = document.getElementById('country');
+    const postCode = document.getElementById('postCode');
+    const date = document.getElementById('date');
+
+    // Set innerHTML of each <p> tag with corresponding data
+    userId.value = data.user_id.toString().padStart(5,0);
+    date.value = data.registration_datetime;
+    firstName.value = data.fname;
+    lastName.value = data.lname;
+    phoneNumber.value = (data.phone || ""); 
+    emailElement.value = data.email;
+    address.value = (data.address || "");
+    city.value = (data.city || "");
+    country.value = (data.country || "");
+    postCode.value = (data.postcode || "");
+}
+
+function accountPageEventListener() {
+    const updateDetailsButton = document.getElementById('updateDetails');
+    updateDetailsButton.addEventListener('click', updateInformation);
+}
+
+function updateInformation(event) {
+    event.preventDefault();
+    const uuserId = document.getElementById('userId').value;
+    const uphoneNumber = document.getElementById('phoneNumber').value;
+    const uaddress = document.getElementById('address').value;
+    const ucity = document.getElementById('city').value;
+    const ucountry = document.getElementById('country').value;
+    const upostCode = document.getElementById('postCode').value;
+
+    const data = {
+        user_id: parseInt(uuserId),
+        phoneNumber: uphoneNumber,
+        address: uaddress,
+        city: ucity,
+        country: ucountry,
+        postCode: upostCode
     };
+
+    // Make a POST request to the API
+    fetch('/api/v1/moreinfo', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Handle API response data here
+        showNotification('Details updated');
+    })
+    .catch(error => {
+        // Handle errors here
+        console.error('There was a problem with the fetch operation:', error);
+    });
 }

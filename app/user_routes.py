@@ -1,5 +1,5 @@
 # user_routes.py
-from flask import Blueprint, request, jsonify, make_response, render_template, send_from_directory
+from flask import Blueprint, request, jsonify, make_response, render_template
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 from app.db_operations import get_db_connection
 from app.constants import UserCodes
@@ -42,10 +42,10 @@ def prepare_user_data(data):
         'salt': salt
     }, None
 
+# route to register user. Data is passed to another method before any DB write operations are carried out.
 @user_blueprint.route("/api/v1/register", methods=['POST'])
 def register_user():
     data = request.json
-    print(data)
     user_data, error_response = prepare_user_data(data)
 
     if error_response:
@@ -81,6 +81,7 @@ def register_user():
             cursor.close()
             connection.close()
 
+# route to log user in and set JWT HTTPOnly cookie
 @user_blueprint.route("/api/v1/login", methods=['POST'])
 def login_user():
     data = request.json
@@ -111,13 +112,6 @@ def login_user():
                 response.set_cookie('access_token_cookie', access_token, httponly=True, path='/')
                 logger.info("Login successful: %s: %s", user_id, email)
                 return response
-                # response_data = {
-                #     "message": "Login successful",
-                #     "access_token_cookie": access_token
-                # }
-                # response = make_response(jsonify(response_data), 200)
-                # logger.info("Login successful: %s: %s", user_id, email)
-                # return response
             else:
                 logger.error("Incorrect username or password during login attempt. %s", UserCodes.INCORRECT_CREDENTIALS)
                 return jsonify({"error": "Incorrect username or password", "code": UserCodes.INCORRECT_CREDENTIALS}), 401
@@ -134,37 +128,92 @@ def login_user():
             cursor.close()
             connection.close()
 
+# route to check if user is logged in and also refresh login token
 @user_blueprint.route("/api/v1/protected", methods=['GET'])
-@jwt_required()
+@jwt_required(optional=True)
 def protected():
     current_user = get_jwt_identity()
-    logger.info("Protected route accessed by user: %s", current_user)
-    return jsonify(logged_in_as=current_user), 200
+    if current_user:
+        user_id = current_user['user_id']
+        fullname = current_user['fullname']
+        access_token = create_access_token(identity={'user_id': user_id,'fullname': fullname})
+        response = make_response(jsonify({'message': 'Success', 'user': current_user}), 200)
+        response.set_cookie('access_token_cookie', access_token, httponly=True, path='/')
+        return jsonify({'message': 'Success', 'user': current_user}), 200
+    else:
+        return jsonify({'message': 'Not logged in'}), 200
 
-@user_blueprint.route("/accounts", methods=['GET'])
+
+# Route for getting or updating user's personal information
+@user_blueprint.route("/api/v1/accounts", methods=['GET'])
 @jwt_required()
 def accounts():
+    current_user = get_jwt_identity()
+    user_id = current_user['user_id']
+    user_details = get_user_details(user_id)
+    return user_details
+
+def get_user_details(current_user_id):
     try:
-        current_user_id = get_jwt_identity()
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        cursor.execute("""
+            SELECT user_id, user.email, details.fname, details.lname, details.phone, details.address, details.postcode, details.city, details.country, details.registration_datetime
+            FROM user
+            INNER JOIN details ON user.id = details.user_id
+            WHERE user.id = %s
+        """, (current_user_id,))
+        user_data = cursor.fetchone()
+        if user_data:
+            user_dict = {
+                "user_id": user_data[0],
+                "email": user_data[1],
+                "fname": user_data[2],
+                "lname": user_data[3],
+                "phone": user_data[4],
+                "address": user_data[5],
+                "postcode": user_data[6],
+                "city": user_data[7],
+                "country": user_data[8],
+                "registration_datetime": user_data[9]
+            }
+            return jsonify(user_dict), 200
+        else:
+            return jsonify({"error": "User not found"}), 404
+    except Exception as e:
+        logger.error("Error fetching user details: %s", e)
+        return jsonify({"error": "An unexpected error occurred"}), 500
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+@user_blueprint.route("/api/v1/moreinfo", methods=['POST'])
+def update_user_details():
+    data = request.json
+    try:
         connection = get_db_connection()
         cursor = connection.cursor()
 
-        cursor.execute("SELECT user.email, details.fname, details.lname, details.phone, details.address, details.postcode, details.city, details.country, details.registration_datetime FROM user INNER JOIN details ON user.id = details.user_id WHERE user.id = %s", (current_user_id,))
-        user_data = cursor.fetchone()
+        cursor.execute("UPDATE details SET phone = %s, address = %s, postcode = %s, city = %s, country = %s WHERE user_id = %s", (data.get('phoneNumber'), data.get('address'), data.get('postCode'), data.get('city'), data.get('country'), data.get('user_id')))
 
-        if user_data:
-            return jsonify(user_data)
-        else:
-            return jsonify({"error": "User not found"}), 404
+        connection.commit()
 
-    except Exception as err:
-        logger.error("Error fetching user details: %s", err)
-        return jsonify({"error": "An unexpected error occurred"}), 500
+        logger.info("User details updated successfully: %s", data.get('user_id'))
+        return jsonify({"message": "User registered successfully", "code": UserCodes.USER_REGISTERED}), 201
+
+    except mysql.connector.Error as err:
+        logger.error("Database error during user update: %s", err)
+        connection.rollback()
+        return jsonify({"error": "Database error"}), 500
 
     finally:
-        cursor.close()
-        connection.close()
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
 
+
+# route to get all product information
 @user_blueprint.route('/api/v1/allproducts', methods=['GET'])
 def get_all_products():
     try:
@@ -207,7 +256,3 @@ def index():
 def render_page(file_name):
     # Assuming your templates are stored in a 'templates' folder
     return render_template(file_name)
-
-@user_blueprint.route('/api/v1/jsonObject', methods=['GET'])
-def get_json_object():
-    return send_from_directory('static/js', 'productdb.json')
