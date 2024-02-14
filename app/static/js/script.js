@@ -986,7 +986,6 @@ function updateInformation(event) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data),
-        credentials: 'include'
     })
     .then(response => {
         if (!response.ok) {

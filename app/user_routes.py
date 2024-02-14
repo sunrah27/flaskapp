@@ -134,11 +134,6 @@ def login_user():
 def protected():
     current_user = get_jwt_identity()
     if current_user:
-        user_id = current_user['user_id']
-        fullname = current_user['fullname']
-        access_token = create_access_token(identity={'user_id': user_id,'fullname': fullname})
-        response = make_response(jsonify({'message': 'Success', 'user': current_user}), 200)
-        response.set_cookie('access_token_cookie', access_token, httponly=True, path='/')
         return jsonify({'message': 'Success', 'user': current_user}), 200
     else:
         return jsonify({'message': 'Not logged in'}), 200
@@ -231,7 +226,6 @@ def get_all_products():
             cursor.close()
 
 @user_blueprint.route('/api/v1/productdetails', methods=['GET'])
-@verify_jwt_in_request()
 def get_product_details():
     try:
         sku = request.args.get('sku')
