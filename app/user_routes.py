@@ -1,6 +1,6 @@
-# user_routes.py
+# app/user_routes.py
 from flask import Blueprint, request, jsonify, make_response, render_template
-from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, verify_jwt_in_request
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 from app.db_operations import get_db_connection
 from app.constants import UserCodes
 import hashlib, mysql.connector, secrets, logging
