@@ -41,8 +41,8 @@ Site has following features completed:
 - [x] Updated login and registration to offer full login and registration functionality replacing `userDB.json`
 - [x] Login and Registration is done using a `Flask API` and stored in `MySQL Database`
 - [x] Add logic to check for session cookie if user has logged in
-- [ ] Implement Accounts page
-- [ ] Allow registered users to change personal information
+- [x] Implement Accounts page
+- [x] Allow registered users to change personal information
 - [ ] Implement Purchase history
 - [x] Login API
 - [x] Registration API
@@ -51,9 +51,13 @@ Site has following features completed:
 - [x] Has Custom Errors and loging functionality
 - [x] Encrypts password with a randomly generated salt
 - [x] MySQL DB stores User, Product, Purchase and Purchase details
+
+## Features for V3.0
 - [ ] Build UI to manually update Product Data
 - [ ] build reporting functionality
 - [ ] Implemente environment variables
+- [ ] Discover how to implement CSRF tokens to all forms
+
 
 ## Detailed breakdown of website development
 
@@ -77,20 +81,6 @@ Before I could even touch JavaScript I had to build my `peoductsDB.json` file. B
 
 But I would ultimately modify the productsDB and remove the two Product Name and settle on one. I also needed to include a data/time with every product as my Homepage had a latest product module. I debated weather to hard code the rating stars but ultimate decided to incluide it as part of the DB. One odd issue I came across later was tha Product Description. i was unable to include any bullet points, this forced me to spllit it into three differnt properties. Product Description, Product List and Product Materials. A surprise outcome of the DB was the easy way to manage the product images. Renaming all of the prduct images with Product SKU made it significantly easier to fetch via JS.
 
-Final Structure of the ProductDB;
-
-- Unique Product ID: Text
-- Product Name: Text
-- Product Description: Text
-- Product List: Array
-- Product Materials: Text
-- Product Type: Text
-- Product Sizes: Array
-- Product Images: Array
-- Product Price: Text
-- Product Ratings: Text
-- Product Date: Text
-
 ### Adding JavaScript
 ------
 
@@ -109,7 +99,7 @@ function getSKUFromURL() {
     return urlParams.get('sku');
 }
 ```
-White this I was now able to search the productDB and display the relevant information. Next step build the Related Products module.
+With this I was now able to search the productDB and display the relevant information. Next step build the Related Products module.
 
 #### Related Products Module
 This module proved more difficult then I had first intended. I was able to display all products related to the product displayed on the module but I was also displaying the existing product. After a lot of time tinkering with JS and pulling my hair out I realised all I needed to do was add `!== currentSku` when declaring the relatedProducts object.
@@ -153,6 +143,16 @@ Python Backend built initially to serve as an intermediary between the eCommerec
 Link to repo: [https://github.com/sunrah27/flaskapp](https://github.com/sunrah27/flaskapp).
 
 ### Challanges
+
+- Cookies and why I absolutely hate them
+- Forced to migrate website into my FlaskApp
+- Protecting API endpoints with JWT
+- So many ideas, not a great designer
+- Why researching tech teaches how to be a bad writer
+- Should I be a developer or write coding tutorials
+- AARRGGGHHH Bugs and I don't know how to fix them
+- Experiencing Dunning-Kruger effect
+- Rise of the Project Manager, must do it properly if the timeline allows
 
 ### Building Api
 
