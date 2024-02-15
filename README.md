@@ -37,7 +37,7 @@ Site has following features completed:
 - [x] Added pop-up notification after login
 - [x] Added pop-up notification after adding item to shopping basket
 
-## New Features in V2.0
+## Features in V2.0
 - [x] Updated login and registration to offer full login and registration functionality replacing `userDB.json`
 - [x] Login and Registration is done using a `Flask API` and stored in `MySQL Database`
 - [x] Add logic to check for session cookie if user has logged in
