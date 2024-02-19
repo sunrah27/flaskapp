@@ -19,48 +19,48 @@ Link to repo: [https://github.com/sunrah27/eCommerce/](https://github.com/sunrah
 
 ## Features
 Site has following features completed:
-[x] Build Homepage `index.html`
-[x] Build Products page `products.html`
-[x] Build Products Details page `product-details.html?sku=xxxxx`
-[x] Build Cart page `cart.html`
-[x] Build Login page `login.html`
-[x] Build Contact page `contact.html`
-[x] Refactor Products page to populate from productDB
-[x] Refactor Product Details page to populate using sku passed va URI
-[x] Refactor Homepage to pull product data from producDB
-[x] Refactor Related Products on Product Details page based on Type
-[x] Code Cart functionality
-[x] Code User login functionality
-[x] Code filter feature in the Products Page
-[x] Code sort feature
-[x] Replace browser alerts with pop-up notifications
-[x] Added pop-up notification after login
-[x] Added pop-up notification after adding item to shopping basket
+- [x] Build Homepage `index.html`
+- [x] Build Products page `products.html`
+- [x] Build Products Details page `product-details.html?sku=xxxxx`
+- [x] Build Cart page `cart.html`
+- [x] Build Login page `login.html`
+- [x] Build Contact page `contact.html`
+- [x] Refactor Products page to populate from productDB
+- [x] Refactor Product Details page to populate using sku passed va URI
+- [x] Refactor Homepage to pull product data from producDB
+- [x] Refactor Related Products on Product Details page based on Type
+- [x] Code Cart functionality
+- [x] Code User login functionality
+- [x] Code filter feature in the Products Page
+- [x] Code sort feature
+- [x] Replace browser alerts with pop-up notifications
+- [x] Added pop-up notification after login
+- [x] Added pop-up notification after adding item to shopping basket
 
 ## Features in V2.0
-[x] Updated login and registration to offer full login and registration functionality replacing `userDB.json`
-[x] Login and Registration is done using a `Flask API` and stored in `MySQL Database`
-[x] Add logic to check for session cookie if user has logged in
-[x] Implement Accounts page
-[x] Allow registered users to change personal information
-[x] Login API
-[x] Registration API
-[x] Stores JWT as a session cookie for each successful login
-[x] Can Create, Read, Update remote MySQL DB
-[x] Has Custom Errors and loging functionality
-[x] Encrypts password with a randomly generated salt
-[x] MySQL DB stores User, Product, Purchase and Purchase details
+- [x] Updated login and registration to offer full login and registration functionality replacing `userDB.json`
+- [x] Login and Registration is done using a `Flask API` and stored in `MySQL Database`
+- [x] Add logic to check for session cookie if user has logged in
+- [x] Implement Accounts page
+- [x] Allow registered users to change personal information
+- [x] Login API
+- [x] Registration API
+- [x] Stores JWT as a session cookie for each successful login
+- [x] Can Create, Read, Update remote MySQL DB
+- [x] Has Custom Errors and loging functionality
+- [x] Encrypts password with a randomly generated salt
+- [x] MySQL DB stores User, Product, Purchase and Purchase details
 
 ## Features for V3.0
-[ ] Refactor Python and JavaScript code (possibly a complete rewrite)
-[ ] Update designa and add logout option
-[ ] Add front end input validation and sanitation
-[ ] Add backend data validation and sanitation
-[ ] Implement Purchase history
-[ ] Build UI to manually update Product Data
-[ ] build reporting functionality
-[ ] Implemente environment variables
-[ ] Discover how to implement CSRF tokens to all forms
+- [ ] Refactor Python and JavaScript code (possibly a complete rewrite)
+- [ ] Update designa and add logout option
+- [ ] Add front end input validation and sanitation
+- [ ] Add backend data validation and sanitation
+- [ ] Implement Purchase history
+- [ ] Build UI to manually update Product Data
+- [ ] build reporting functionality
+- [ ] Implemente environment variables
+- [ ] Discover how to implement CSRF tokens to all forms
 
 ## Rise of the Project Manager Full Stack developer, must do it the right way, maybe....
 
