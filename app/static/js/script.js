@@ -251,12 +251,7 @@ async function populateLatestProducts(productData) {
 
 // Function to fetch and sort product data
 function fetchAndSortProductData(productData) {
-    // Convert date strings to Date objects
-    productData.forEach(product => {
-        product.date = new Date(product.date);
-    });
-    // Sorting logic remains the same
-    return productData.sort((a, b) => b.date - a.date);
+    return productData.sort((a, b) => new Date(b.date) - new Date(a.date));
 }
 
 //
@@ -310,7 +305,7 @@ function populateProductsPage(productData, filterType = 'all', sortType = 'defau
     productRow.innerHTML = '';
 
     // Apply filter by type
-    const filteredProducts = (filterType !== 'all') ? productData.filter(product => product.type.toLowerCase() === filterType) : productData;
+    const filteredProducts = (filterType !== 'all') ? productData.filter(product => product.type.toLowerCase() === filterType.toLowerCase()) : productData;
 
     // Apply sorting
     const sortedProducts = sortProducts(filteredProducts, sortType);
@@ -353,8 +348,9 @@ function populateFilterByTypeDropdown(productData) {
 
     uniquePTypes.forEach(type => {
         const option = document.createElement('option');
-        option.value = type.charAt(0).toUpperCase();
-        option.textContent = type;
+        const capitalizedType = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+        option.value = capitalizedType; // Ensure option value is also capitalized
+        option.textContent = capitalizedType;
         filterByTypeDropdown.appendChild(option);
     });
 }
