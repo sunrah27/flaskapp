@@ -11,8 +11,8 @@ class Config:
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=60)
     JWT_TOKEN_LOCATION = 'cookies'
-    JWT_COOKIE_SECURE = True  # Set to True in production (requires HTTPS)
-    JWT_COOKIE_CSRF_PROTECT = True  # Set to True if you want CSRF protection
+    JWT_COOKIE_SECURE = False  # Set to True in production (requires HTTPS)
+    JWT_COOKIE_CSRF_PROTECT = False  # Set to True if you want CSRF protection
 
     # Set cookie expiration to match token expiration
     JWT_COOKIE_EXPIRES = JWT_ACCESS_TOKEN_EXPIRES
