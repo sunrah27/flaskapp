@@ -402,9 +402,9 @@ async function fetchProductDetails(sku) {
 
     // Generate HTML elements for each image
     const smallImagesHTML = imagesArray.map(image => `
-    <div class="small-img-col">
-        <img src="/static/img/${image.trim()}">
-    </div>
+        <div class="small-img-col">
+            <img src="/static/img/${image.trim()}">
+        </div>
     `).join('');
 
     if (product) {
