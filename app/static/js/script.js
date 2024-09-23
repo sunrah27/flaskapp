@@ -645,9 +645,10 @@ function removeCartItem(sku, size) {
 
     // Log cart items before removal
     console.log('Cart items before removal:', cartItems);
+    console.log('Removing item with SKU:', sku, 'and Size:', size);
 
     // Remove item from the cart based on SKU and size
-    cartItems = cartItems.filter(item => !(item.sku === sku && item.size === size));
+    cartItems = cartItems.filter(item => !(item.sku == sku && item.size == size)); // Loose equality
 
     // Save the updated cart data to local storage
     localStorage.setItem('cart', JSON.stringify(cartItems));
@@ -656,9 +657,10 @@ function removeCartItem(sku, size) {
     console.log('Cart items after removal:', cartItems);
 
     // Update the cart display on the cart page
-    //displayCartItems();
+    //displayCartItems(); // Ensure productData is accessible
     updateCartCounter();
 }
+
 
 function addCartEventListners() {
     checkoutBtn.addEventListener('click', () => {
