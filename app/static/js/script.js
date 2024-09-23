@@ -570,8 +570,7 @@ function updateCartCounter() {
 //
 
 // Function to display cart items stored in local storage on the carts page
-async function displayCartItems() {
-    const productData = await getAllProducts('/api/v1/allproducts');
+function displayCartItems(productData) {
     const cartItemsContainer = document.getElementById('tableBody');
     const totalPriceContainer = document.querySelector('.totalPrice');
     const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
@@ -580,7 +579,7 @@ async function displayCartItems() {
     if (cartItems.length > 0) {
         // Populate cart items dynamically
         cartItems.forEach(item => {
-            // find product details based on the pSku value stored in the local storage
+            // find product details based on the sku value stored in the local storage
             const product = productData.find(product => product.sku === item.sku);
             if (product) {
                 // generate html for cart page
@@ -650,8 +649,8 @@ function removeCartItem(sku, size) {
     localStorage.setItem('cart', JSON.stringify(cartItems));
 
     // Update the cart display on the cart page
-    displayCartItems();
     updateCartCounter();
+    location.reload();
 }
 
 
