@@ -643,12 +643,11 @@ async function displayCartItems() {
 function removeCartItem(sku, size) {
     let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
 
-    // Log cart items before removal
-    console.log('Cart items before removal:', cartItems);
-    console.log('Removing item with SKU:', sku, 'and Size:', size);
-
+    console.log(`values passed to function ${sku}, ${size}`);
+    console.log(`valies in cartItems ${cartItems}`);
+    
     // Remove item from the cart based on SKU and size
-    cartItems = cartItems.filter(item => !(item.sku == sku && item.size == size)); // Loose equality
+    cartItems = cartItems.filter(item => !(item.sku == sku && item.size == size));
 
     // Save the updated cart data to local storage
     localStorage.setItem('cart', JSON.stringify(cartItems));
