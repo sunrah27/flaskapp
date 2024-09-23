@@ -644,7 +644,7 @@ function removeCartItem(sku, size, productData) {
     let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
 
     // Remove item from the cart based on SKU and size
-    cartItems = cartItems.filter(item => !(item.pSku === sku && item.size === size));
+    cartItems = cartItems.filter(item => !(item.sku === sku && item.size === size));
 
     // Save the updated cart data to local storage
     localStorage.setItem('cart', JSON.stringify(cartItems));
