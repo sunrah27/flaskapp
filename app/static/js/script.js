@@ -640,9 +640,11 @@ async function displayCartItems() {
     };
 }
 
-// Function to remove an Item from the cart
 function removeCartItem(sku, size) {
     let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+
+    // Log cart items before removal
+    console.log('Cart items before removal:', cartItems);
 
     // Remove item from the cart based on SKU and size
     cartItems = cartItems.filter(item => !(item.sku === sku && item.size === size));
@@ -650,8 +652,11 @@ function removeCartItem(sku, size) {
     // Save the updated cart data to local storage
     localStorage.setItem('cart', JSON.stringify(cartItems));
 
+    // Log cart items after removal
+    console.log('Cart items after removal:', cartItems);
+
     // Update the cart display on the cart page
-    displayCartItems(); // Ensure productData is accessible
+    //displayCartItems();
     updateCartCounter();
 }
 
