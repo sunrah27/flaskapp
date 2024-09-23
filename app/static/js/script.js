@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async function () {
     const productData = await getAllProducts('/api/v1/allproducts');
-    
+
     // Display mobile menu
     const menuItems = document.getElementById('menuItems');
     const menuIcon = document.getElementById('menuIcon');
@@ -570,7 +570,8 @@ function updateCartCounter() {
 //
 
 // Function to display cart items stored in local storage on the carts page
-function displayCartItems(productData) {
+async function displayCartItems() {
+    const productData = await getAllProducts('/api/v1/allproducts');
     const cartItemsContainer = document.getElementById('tableBody');
     const totalPriceContainer = document.querySelector('.totalPrice');
     const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
@@ -640,7 +641,7 @@ function displayCartItems(productData) {
 }
 
 // Function to remove an Item from the cart
-function removeCartItem(sku, size, productData) {
+function removeCartItem(sku, size) {
     let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
 
     // Remove item from the cart based on SKU and size
@@ -650,7 +651,7 @@ function removeCartItem(sku, size, productData) {
     localStorage.setItem('cart', JSON.stringify(cartItems));
 
     // Update the cart display on the cart page
-    displayCartItems(productData); // Ensure productData is accessible
+    displayCartItems(); // Ensure productData is accessible
     updateCartCounter();
 }
 
