@@ -570,8 +570,7 @@ function updateCartCounter() {
 //
 
 // Function to display cart items stored in local storage on the carts page
-async function displayCartItems() {
-    const productData = await getAllProducts('/api/v1/allproducts');
+function displayCartItems(productData) {
     const cartItemsContainer = document.getElementById('tableBody');
     const totalPriceContainer = document.querySelector('.totalPrice');
     const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
@@ -580,7 +579,7 @@ async function displayCartItems() {
     if (cartItems.length > 0) {
         // Populate cart items dynamically
         cartItems.forEach(item => {
-            // find product details based on the pSku value stored in the local storage
+            // find product details based on the sku value stored in the local storage
             const product = productData.find(product => product.sku === item.sku);
             if (product) {
                 // generate html for cart page
@@ -643,22 +642,15 @@ async function displayCartItems() {
 function removeCartItem(sku, size) {
     let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
 
-    // Log cart items before removal
-    console.log('Cart items before removal:', cartItems);
-    console.log('Removing item with SKU:', sku, 'and Size:', size);
-
     // Remove item from the cart based on SKU and size
-    cartItems = cartItems.filter(item => !(item.sku == sku && item.size == size)); // Loose equality
+    cartItems = cartItems.filter(item => !(item.sku == sku && item.size == size));
 
     // Save the updated cart data to local storage
     localStorage.setItem('cart', JSON.stringify(cartItems));
 
-    // Log cart items after removal
-    console.log('Cart items after removal:', cartItems);
-
     // Update the cart display on the cart page
-    //displayCartItems(); // Ensure productData is accessible
     updateCartCounter();
+    location.reload();
 }
 
 
