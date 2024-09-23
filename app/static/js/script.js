@@ -592,7 +592,7 @@ function displayCartItems(productData) {
                                     <p>${product.fullName}</p>
                                     <small>SKU-${product.sku}</small>
                                     <small>Price: £${parseFloat(product.price).toFixed(2)}</small>
-                                    <a href="" onclick="removeCartItem('${product.sku}', '${item.size}')">Remove</a>
+                                    <a href="#" onclick="removeCartItem('${product.sku}', '${item.size}'); return false;">Remove</a>
                                 </div>
                             </div>
                         </td>
@@ -650,7 +650,7 @@ function removeCartItem(sku, size, productData) {
     localStorage.setItem('cart', JSON.stringify(cartItems));
 
     // Update the cart display on the cart page
-    displayCartItems(productData);
+    displayCartItems(productData); // Ensure productData is accessible
     updateCartCounter();
 }
 
